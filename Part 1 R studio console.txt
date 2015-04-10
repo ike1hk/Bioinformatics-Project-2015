@@ -1,0 +1,760 @@
+> #make two tracks
+> wtTrack <- AlignmentsTrack(paste0(resDir,"WT_1.bam"),isPaired=T,
++                            name="WT_1",chr="X",genome="sce3")
+> snf2Track <- AlignmentsTrack(paste0(resDir,"Snf2_1.bam"),isPaired=T,
++                              name="Snf2_1",chr="X",genome="sce3")
+> # and plot them
+> plotTracks(c(wtTrack,snf2Track),chromosome="X",genome="sce3",from=2e4,to=5e4)
+> require(Gviz)
+> options(ucscChromosomeNames=FALSE)
+> wtTrack <- AlignmentsTrack(paste0(resDir,"WT_1.bam"),isPaired=T,
++                            name="WT_1",chr="X",genome="sce3")
+> snf2Track <- AlignmentsTrack(paste0(resDir,"Snf2_1.bam"),isPaired=T,
++                              name="Snf2_1",chr="X",genome="sce3")
+> # and plot them
+> plotTracks(c(wtTrack,snf2Track),chromosome="X",genome="sce3",from=2e4,to=5e4)
+> if(!require(biomaRt)) biocLite("biomaRt")
+Loading required package: biomaRt
+> require(biomaRt)
+> bm <- useMart(biomart="ensembl",dataset="scerevisiae_gene_ensembl")
+> fm <- Gviz:::.getBMFeatureMap()
+> biomTrack <- BiomartGeneRegionTrack(genome = "sce3", chromosome = "X", biomart=bm,
++                                     start = 2e4, end = 5e4, name = "ENSEMBL",shape="arrow",
++                                     showId=TRUE,transcriptAnnotation="gene")
+> plotTracks(c(wtTrack,snf2Track,biomTrack),chromosome="X",
++                   extend.left=-1000,genome="sce3",from=2e4,to=5e4)
+> faURL <- "ftp://ftp.ensembl.org/pub/release-78/gtf/saccharomyces_cerevisiae/"
+> faURL <- paste0(faURL,"Saccharomyces_cerevisiae.R64-1-1.78.gtf.gz")
+> # give a slightly nicer local file name
+> gtfFile <- paste0(locDir,"BS32010_rnaseq/Scerevisiae_R64.gtf")
+> # download and unzip the file
+> download.file(faURL, paste0(gtfFile,".gz"))
+trying URL 'ftp://ftp.ensembl.org/pub/release-78/gtf/saccharomyces_cerevisiae/Saccharomyces_cerevisiae.R64-1-1.78.gtf.gz'
+ftp data connection made, file length 577066 bytes
+opened URL
+==================================================
+downloaded 563 Kb
+
+> if(!file.exists(gtfFile)) gunzip(paste0(gtfFile,".gz"))
+> gtfFile <- paste0(locDir,"BS32010_rnaseq/Scerevisiae_R64.gtf")
+> bamfiles <- list.files(resDir,pattern=".*bam$",full=TRUE)
+> fc <- featureCounts(files=bamfiles, annot.ext=gtfFile, isGTFAnnotationFile=TRUE, 
++                     GTF.featureType="exon", GTF.attrType="gene_id")
+
+        ==========     _____ _    _ ____  _____  ______          _____  
+        =====         / ____| |  | |  _ \|  __ \|  ____|   /\   |  __ \ 
+          =====      | (___ | |  | | |_) | |__) | |__     /  \  | |  | |
+            ====      \___ \| |  | |  _ <|  _  /|  __|   / /\ \ | |  | |
+              ====    ____) | |__| | |_) | | \ \| |____ / ____ \| |__| |
+        ==========   |_____/ \____/|____/|_|  \_\______/_/    \_\_____/
+       Rsubread 1.16.1
+
+//========================== featureCounts setting ===========================\\
+||                                                                            ||
+||             Input files : 4 BAM files                                      ||
+||                           P /usr/local/share/BS32010/expression/data// ... ||
+||                           P /usr/local/share/BS32010/expression/data// ... ||
+||                           P /usr/local/share/BS32010/expression/data// ... ||
+||                           P /usr/local/share/BS32010/expression/data// ... ||
+||                                                                            ||
+||             Output file : ./.Rsubread_featureCounts_pid7567                ||
+||             Annotations : /homes/nschan/BS32010/BS32010_rnaseq/Scerevi ... ||
+||                                                                            ||
+||                 Threads : 1                                                ||
+||                   Level : meta-feature level                               ||
+||              Paired-end : no                                               ||
+||         Strand specific : no                                               ||
+||      Multimapping reads : not counted                                      ||
+|| Multi-overlapping reads : not counted                                      ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+//================================= Running ==================================\\
+||                                                                            ||
+|| Load annotation file /homes/nschan/BS32010/BS32010_rnaseq/Scerevisiae_ ... ||
+||    Features : 7553                                                         ||
+||    Meta-features : 7126                                                    ||
+||    Chromosomes : 17                                                        ||
+||                                                                            ||
+|| Process BAM file /usr/local/share/BS32010/expression/data//Snf2_1.bam...   ||
+||    Paired-end reads are included.                                          ||
+||    Assign reads to features...                                             ||
+||    Total reads : 200000                                                    ||
+||    Successfully assigned reads : 161360 (80.7%)                            ||
+||    Running time : 0.01 minutes                                             ||
+||                                                                            ||
+|| Process BAM file /usr/local/share/BS32010/expression/data//Snf2_2.bam...   ||
+||    Paired-end reads are included.                                          ||
+||    Assign reads to features...                                             ||
+||    Total reads : 200000                                                    ||
+||    Successfully assigned reads : 163360 (81.7%)                            ||
+||    Running time : 0.02 minutes                                             ||
+||                                                                            ||
+|| Process BAM file /usr/local/share/BS32010/expression/data//WT_1.bam...     ||
+||    Paired-end reads are included.                                          ||
+||    Assign reads to features...                                             ||
+||    Total reads : 200000                                                    ||
+||    Successfully assigned reads : 155365 (77.7%)                            ||
+||    Running time : 0.02 minutes                                             ||
+||                                                                            ||
+|| Process BAM file /usr/local/share/BS32010/expression/data//WT_2.bam...     ||
+||    Paired-end reads are included.                                          ||
+||    Assign reads to features...                                             ||
+||    Total reads : 200000                                                    ||
+||    Successfully assigned reads : 159420 (79.7%)                            ||
+||    Running time : 0.02 minutes                                             ||
+||                                                                            ||
+||                         Read assignment finished.                          ||
+||                                                                            ||
+\\===================== http://subread.sourceforge.net/ ======================//
+
+> fc$targets <- sapply(fc$targets,function(x) tail(strsplit(x,"[.][.]")[[1]],1)) 
+> colnames(fc$counts) <- fc$targets
+> colnames(fc$stat)[2:length(colnames(fc$stat))] <- fc$targets
+> save(fc,file="fc.Rdata")
+> save(fc,file="fc.Rdata")
+> if(!file.exists("objectname.RData")){
++   ... do processing
+Error: unexpected symbol in:
+"if(!file.exists("objectname.RData")){
+  ... do"
+>   save(objectname,"objectname.Rdata")
+Error in save(objectname, "objectname.Rdata") : 
+  object 'objectname' not found
+> }else{
+Error: unexpected '}' in "}"
+>   load("objectname.RData")
+Error in readChar(con, 5L, useBytes = TRUE) : cannot open the connection
+In addition: Warning message:
+In readChar(con, 5L, useBytes = TRUE) :
+  cannot open compressed file 'objectname.RData', probable reason 'No such file or directory'
+> }
+Error: unexpected '}' in "}"
+> save(fc,file="fc.Rdata")
+> if(!file.exists("objectname.RData")){
++   ... do processing
+Error: unexpected symbol in:
+"if(!file.exists("objectname.RData")){
+  ... do"
+>   save(objectname,"objectname.Rdata")
+Error in save(objectname, "objectname.Rdata") : 
+  object 'objectname' not found
+> }else{
+Error: unexpected '}' in "}"
+>   load("objectname.RData")
+Error in readChar(con, 5L, useBytes = TRUE) : cannot open the connection
+In addition: Warning message:
+In readChar(con, 5L, useBytes = TRUE) :
+  cannot open compressed file 'objectname.RData', probable reason 'No such file or directory'
+> }
+Error: unexpected '}' in "}"
+> #load(paste0(resDir,"fc.Rdata")) previously loaded dataset
+> load("/usr/local/share/BS32010/expression/data/fullFC.RData")
+> summary(fc)
+           Length Class      Mode     
+counts     85512  -none-     numeric  
+annotation     6  data.frame list     
+targets       12  -none-     character
+stat          13  data.frame list     
+> head(fc$counts)
+          Snf2_1.bam Snf2_2.bam Snf2_3.bam Snf2_4.bam Snf2_5.bam Snf2_6.bam WT_1.bam
+YDL248W         2502       2808       2480       2549       2767       2471     2447
+YDL247W-A         20          8         22         17         22         23       37
+YDL247W          630        636        581        548        621        512      396
+YDL246C          406        420        399        417        459        415      271
+YDL245C          442        397        435        410        413        370      329
+YDL244W          451        514        481        492        478        482      138
+          WT_2.bam WT_3.bam WT_4.bam WT_5.bam WT_6.bam
+YDL248W       2663     2540     2907     2831     2306
+YDL247W-A       34       38       29       24       24
+YDL247W        365      381      433      365      318
+YDL246C        316      261      373      239      283
+YDL245C        333      273      345      340      304
+YDL244W        174      142      187      120      154
+> head(fc$annotation)
+     GeneID Chr Start   End Strand Length
+1   YDL248W  IV  1802  2953      +   1152
+2 YDL247W-A  IV  3762  3836      +     75
+3   YDL247W  IV  5985  7814      +   1830
+4   YDL246C  IV  8683  9756      -   1074
+5   YDL245C  IV 11657 13360      -   1704
+6   YDL244W  IV 16204 17226      +   1023
+> fc$stat
+                       Status Snf2_1.bam Snf2_2.bam Snf2_3.bam Snf2_4.bam Snf2_5.bam
+1                    Assigned   20189881   22401565   19809629   20959720   20944138
+2        Unassigned_Ambiguity    1307749    1593978    1433201    1376788    2178101
+3     Unassigned_MultiMapping          0          0          0          0          0
+4       Unassigned_NoFeatures    1740797    1573492    1896126    1720896    1826895
+5         Unassigned_Unmapped          0          0          0          0          0
+6   Unassigned_MappingQuality          0          0          0          0          0
+7  Unassigned_FragementLength          0          0          0          0          0
+8          Unassigned_Chimera          0          0          0          0          0
+9        Unassigned_Secondary          0          0          0          0          0
+10     Unassigned_Nonjunction          0          0          0          0          0
+11       Unassigned_Duplicate          0          0          0          0          0
+   Snf2_6.bam WT_1.bam WT_2.bam WT_3.bam WT_4.bam WT_5.bam WT_6.bam
+1    20383770 22462139 21967336 22154938 24704543 21626123 20906454
+2     1356899  2178400  1650534  2538090  2374169  1574227  2000219
+3           0        0        0        0        0        0        0
+4     1634725  1742723  1559172  1874724  1515317  1877316  1382097
+5           0        0        0        0        0        0        0
+6           0        0        0        0        0        0        0
+7           0        0        0        0        0        0        0
+8           0        0        0        0        0        0        0
+9           0        0        0        0        0        0        0
+10          0        0        0        0        0        0        0
+11          0        0        0        0        0        0        0
+> library(pvclust)
+> if(!exists("pvcl")){
++   pvcl <- pvclust(fc$counts)
++ }
+Bootstrap (r = 0.5)... Done.
+Bootstrap (r = 0.6)... Done.
+Bootstrap (r = 0.7)... Done.
+Bootstrap (r = 0.8)... Done.
+Bootstrap (r = 0.9)... Done.
+Bootstrap (r = 1.0)... Done.
+Bootstrap (r = 1.1)... Done.
+Bootstrap (r = 1.2)... Done.
+Bootstrap (r = 1.3)... Done.
+Bootstrap (r = 1.4)... Done.
+> library(pvclust)
+> pvcl <- pvclust(fc$counts)
+Bootstrap (r = 0.5)... Done.
+Bootstrap (r = 0.6)... Done.
+Bootstrap (r = 0.7)... Done.
+Bootstrap (r = 0.8)... Done.
+Bootstrap (r = 0.9)... Done.
+Bootstrap (r = 1.0)... Done.
+Bootstrap (r = 1.1)... Done.
+Bootstrap (r = 1.2)... Done.
+Bootstrap (r = 1.3)... Done.
+Bootstrap (r = 1.4)... Done.
+> plot(pvcl)
+Error: invalid graphics state
+> require(edgeR)
+> condition <- as.factor(sapply(colnames(fc$counts),function(cn){ head(strsplit(cn,"_")[[1]],1)})) 
+> condition <- relevel(condition,"WT")
+> dge <- DGEList(fc$counts,group=condition)
+> plotMDS(dge)
+Error in plot.new() : figure margins too large
+> plotMDS(dge)
+Error in plot.new() : figure margins too large
+> qqplot(fc$counts[,1],fc$counts[,3], pch=20, main="Quantile-Quantile Plot", 
++        xlab="Quantiles sample WT_1", ylab="Quantiles sample Snf2_1")
+Error in plot.new() : figure margins too large
+> abline(0,1,col="red")
+Error in int_abline(a = a, b = b, h = h, v = v, untf = untf, ...) : 
+  invalid graphics state
+> require(edgeR)
+> edgeRUsersGuide()
+[1] "/usr/lib64/R/library/edgeR/doc/edgeRUsersGuide.pdf"
+/usr/bin/xdg-open: line 402: htmlview: command not found
+No protocol specified
+No protocol specified
+Error: cannot open display: :0
+/usr/bin/xdg-open: line 402: mozilla: command not found
+/usr/bin/xdg-open: line 402: netscape: command not found
+/usr/bin/xdg-open: line 402: links: command not found
+/usr/bin/xdg-open: line 402: lynx: command not found
+xdg-open: no method available for opening '/usr/lib64/R/library/edgeR/doc/edgeRUsersGuide.pdf'
+> require(edgeR)
+Warning message:
+display list redraw incomplete 
+> condition <- as.factor(sapply(colnames(fc$counts),function(cn){ head(strsplit(cn,"_")[[1]],1)})) 
+> condition <- relevel(condition,"WT")
+> dge <- DGEList(fc$counts,group=condition)
+> plotMDS(dge)
+> qqplot(fc$counts[,1],fc$counts[,3], pch=20, main="Quantile-Quantile Plot", 
++        xlab="Quantiles sample WT_1", ylab="Quantiles sample Snf2_1")
+> abline(0,1,col="red")
+> qqplot(fc$counts[,1],fc$counts[,3], pch=20, main="Quantile-Quantile Plot", 
++        xlab="Quantiles sample WT_1", ylab="Quantiles sample Snf2_1")
+> abline(0,1,col="yellow")
+> qqplot(fc$counts[,1],fc$counts[,3], pch=20, main="Quantile-Quantile Plot", 
++        xlab="Quantiles sample WT_1", ylab="Quantiles sample Snf2_1")
+> abline(0,2,col="blue")
+> qqplot(fc$counts[,1],fc$counts[,3], pch=20, main="Quantile-Quantile Plot", 
++        xlab="Quantiles sample WT_1", ylab="Quantiles sample Snf2_1")
+> abline(0,1,col="blue")
+> qqplot(fc$counts[,1],fc$counts[,3], pch=20, main="Quantile-Quantile Plot", 
++        xlab="Quantiles sample WT_1", ylab="Quantiles sample Snf2_1")
+> abline(0,1,col="blue")
+> qqplot(fc$counts[,1],fc$counts[,3], pch=20, main="Quantile-Quantile Plot", 
++        xlab="Quantiles sample WT_1", ylab="Quantiles sample Snf2_1")
+> abline(0,1,col="blue")
+> require(edgeR)
+> edgeRUsersGuide()
+[1] "/usr/lib64/R/library/edgeR/doc/edgeRUsersGuide.pdf"
+/usr/bin/xdg-open: line 402: htmlview: command not found
+No protocol specified
+No protocol specified
+Error: cannot open display: :0
+/usr/bin/xdg-open: line 402: mozilla: command not found
+/usr/bin/xdg-open: line 402: netscape: command not found
+/usr/bin/xdg-open: line 402: links: command not found
+/usr/bin/xdg-open: line 402: lynx: command not found
+xdg-open: no method available for opening '/usr/lib64/R/library/edgeR/doc/edgeRUsersGuide.pdf'
+> require(edgeR)
+> edgeRUsersGuide()
+[1] "/usr/lib64/R/library/edgeR/doc/edgeRUsersGuide.pdf"
+/usr/bin/xdg-open: line 402: htmlview: command not found
+No protocol specified
+No protocol specified
+Error: cannot open display: :0
+/usr/bin/xdg-open: line 402: mozilla: command not found
+/usr/bin/xdg-open: line 402: netscape: command not found
+/usr/bin/xdg-open: line 402: links: command not found
+/usr/bin/xdg-open: line 402: lynx: command not found
+xdg-open: no method available for opening '/usr/lib64/R/library/edgeR/doc/edgeRUsersGuide.pdf'
+> require(edgeR)
+> edgeRUsersGuide()
+[1] "/usr/lib64/R/library/edgeR/doc/edgeRUsersGuide.pdf"
+/usr/bin/xdg-open: line 402: htmlview: command not found
+No protocol specified
+No protocol specified
+Error: cannot open display: :0
+/usr/bin/xdg-open: line 402: mozilla: command not found
+/usr/bin/xdg-open: line 402: netscape: command not found
+/usr/bin/xdg-open: line 402: links: command not found
+/usr/bin/xdg-open: line 402: lynx: command not found
+xdg-open: no method available for opening '/usr/lib64/R/library/edgeR/doc/edgeRUsersGuide.pdf'
+> qqplot(fc$counts[,1],fc$counts[,3], pch=20, main="Quantile-Quantile Plot", 
++        xlab="Quantiles sample WT_1", ylab="Quantiles sample Snf2_1")
+> abline(0,1,col="blue")
+> 
+> 
+> ## Gene Length
+> - RPKM
+Error: object 'RPKM' not found
+>     - Read pre thousand base pairs per million reads
+Error: unexpected symbol in "    - Read pre"
+>     - Counts per million
+Error: unexpected symbol in "    - Counts per"
+> $$
+Error: unexpected '$' in "$"
+> R_{PKM}=R_g\frac{1000}{L_g}\frac{1000000}{R_s}
+Error: unexpected '{' in "R_{"
+> $$
+Error: unexpected '$' in "$"
+>     - $R_g$ reads assigned to gene g
+Error: unexpected '$' in "    - $"
+>     - $L_g$ length of gene g in base pairs
+Error: unexpected '$' in "    - $"
+>     - $R_s$ total reads in the sample
+Error: unexpected '$' in "    - $"
+> 
+> ## Other normalisation
+> - Model fit normalisation
+Error: unexpected symbol in "- Model fit"
+>     - edgeR 
+Error: object 'edgeR' not found
+>         - TMM (Trimmed Mean of M-values)
+Error: unexpected symbol in "        - TMM (Trimmed Mean"
+>         - RLE (Relative log expression)
+Error: unexpected symbol in "        - RLE (Relative log"
+>     - DESeq
+Error: object 'DESeq' not found
+>         - calculates the median for all genes in a sample of the ratio of the read count to 
+Error: unexpected symbol in "        - calculates the"
+>           geometric mean for that gene across samples
+Error: unexpected symbol in "          geometric mean"
+> $$
+Error: unexpected '$' in "$"
+> M_{gss'}=log_2(\frac{R_{gs}/R_{s}}{R_{gs'}/N_{s'}})
+Error: unexpected '{' in "M_{"
+> A_{gss'}=log_2(R_{gs}/R_{s} \dot R_{gs'}/N_{s'})
+Error: unexpected '{' in "A_{"
+> $$
+Error: unexpected '$' in "$"
+> - DESeq and edgeR assume these normalisations and take them into account in the model fitting
+Error: unexpected symbol in "- DESeq and"
+> 
+> ## Spike-in or Housekeeping
+> - Spike ins
+Error: unexpected symbol in "- Spike ins"
+>     - artificially introduced RNAs of "known" concentrations of fold change used to normalise
+Error: unexpected symbol in "    - artificially introduced"
+> - Housekeeping genes
+Error: unexpected symbol in "- Housekeeping genes"
+>     - genes that are expected from biological knowledge to be unchanging
+Error: unexpected symbol in "    - genes that"
+> 
+> ## Differential Expression
+> 
+> #next step for final report
+> 
+> ```{r chunk15,eval=FALSE}
+Error: attempt to use zero-length variable name
+> require(edgeR)
+> edgeRUsersGuide()
+[1] "/usr/lib64/R/library/edgeR/doc/edgeRUsersGuide.pdf"
+/usr/bin/xdg-open: line 402: htmlview: command not found
+No protocol specified
+No protocol specified
+Error: cannot open display: :0
+/usr/bin/xdg-open: line 402: mozilla: command not found
+/usr/bin/xdg-open: line 402: netscape: command not found
+/usr/bin/xdg-open: line 402: links: command not found
+/usr/bin/xdg-open: line 402: lynx: command not found
+xdg-open: no method available for opening '/usr/lib64/R/library/edgeR/doc/edgeRUsersGuide.pdf'
+> condition <- as.factor(sapply(colnames(fc$counts),function(cn){ head(strsplit(cn,"_")[[1]],1)})) 
+> condition <- relevel(condition,"WT")
+> condition
+Snf2_1.bam Snf2_2.bam Snf2_3.bam Snf2_4.bam Snf2_5.bam Snf2_6.bam   WT_1.bam   WT_2.bam 
+      Snf2       Snf2       Snf2       Snf2       Snf2       Snf2         WT         WT 
+  WT_3.bam   WT_4.bam   WT_5.bam   WT_6.bam 
+        WT         WT         WT         WT 
+Levels: WT Snf2
+> dge <- DGEList(fc$counts,group=condition)
+> dge
+An object of class "DGEList"
+$counts
+          Snf2_1.bam Snf2_2.bam Snf2_3.bam Snf2_4.bam Snf2_5.bam Snf2_6.bam WT_1.bam
+YDL248W         2502       2808       2480       2549       2767       2471     2447
+YDL247W-A         20          8         22         17         22         23       37
+YDL247W          630        636        581        548        621        512      396
+YDL246C          406        420        399        417        459        415      271
+YDL245C          442        397        435        410        413        370      329
+          WT_2.bam WT_3.bam WT_4.bam WT_5.bam WT_6.bam
+YDL248W       2663     2540     2907     2831     2306
+YDL247W-A       34       38       29       24       24
+YDL247W        365      381      433      365      318
+YDL246C        316      261      373      239      283
+YDL245C        333      273      345      340      304
+7121 more rows ...
+
+$samples
+           group lib.size norm.factors
+Snf2_1.bam  Snf2 20189881            1
+Snf2_2.bam  Snf2 22401565            1
+Snf2_3.bam  Snf2 19809629            1
+Snf2_4.bam  Snf2 20959720            1
+Snf2_5.bam  Snf2 20944138            1
+7 more rows ...
+
+> if(!require(splines)) biocLite("splines")
+Loading required package: splines
+> if(!exists("lrt")){
++  design <- model.matrix(~condition)
++  dge <- estimateGLMCommonDisp(dge,design)
++  dge <- estimateGLMTrendedDisp(dge,design)
++  dge <- estimateGLMTagwiseDisp(dge,design)
++  fit <- glmFit(dge,design)
++  lrt <- glmLRT(fit,coef=2)
++  tt <- topTags(lrt,n=10000)
++ }
+> if(!exists("nlrt")){
++   ndge <- calcNormFactors(dge)
++   ndge <- estimateGLMCommonDisp(ndge,design)
++   ndge <- estimateGLMTrendedDisp(ndge,design)
++   ndge <- estimateGLMTagwiseDisp(ndge,design)
++   nfit <- glmFit(ndge,design)
++   nlrt <- glmLRT(nfit,coef=2)
++   ntt <- topTags(nlrt,n=10000)
++ }
+> nonMAplot <- paste0(outDir,"nnMAplot.png")
+> png(nonMAplot,width=400,height=400)
+> plotSmear(lrt)
+> abline(h=0,col="red")
+> dev.off()
+RStudioGD 
+        2 
+> normMAplot <- paste0(outDir,"normMAplot.png")
+> png(normMAplot,width=400,height=400)
+> plotSmear(nlrt)
+> abline(h=0,col="red")
+> dev.off()
+RStudioGD 
+        2 
+> nonMAplot <- paste0(outDir,"nnMAplot.png")
+> png(nonMAplot,width=400,height=400)
+> plotSmear(lrt)
+> abline(h=0,col="red")
+> dev.off()
+RStudioGD 
+        2 
+> normMAplot <- paste0(outDir,"normMAplot.png")
+> png(normMAplot,width=400,height=400)
+> plotSmear(nlrt)
+> abline(h=0,col="red")
+> dev.off()
+RStudioGD 
+        2 
+> ntt$table[20:30,]
+            logFC    logCPM       LR PValue FDR
+YDR343C -3.405986 12.030581 5895.307      0   0
+YIL169C -3.153022  7.091801 2649.363      0   0
+YER150W -3.067948  8.252484 1993.941      0   0
+YLR327C -3.037739  9.481847 1509.394      0   0
+YOL152W -3.031006  4.895110 1514.354      0   0
+YPR149W -2.994457  9.522298 2822.858      0   0
+YIL015W -2.927431  7.235690 2581.841      0   0
+YHR087W -2.905289  7.615725 2937.590      0   0
+YLR258W -2.852421 10.197811 1762.921      0   0
+YDR077W -2.831175 12.026098 5543.730      0   0
+YDR070C -2.786060  5.734340 1584.576      0   0
+> annot <- getBM(attributes=c("ensembl_gene_id","external_gene_name", "chromosome_name",
++                             "start_position","end_position","strand","description"),
++                filter="ensembl_gene_id",
++                values=rownames(nlrt)[1:200],
++                mart=bm)
+> annot[3:5,]
+  ensembl_gene_id external_gene_name chromosome_name start_position end_position strand
+3         YDL062W                                 IV         339857       340282      1
+4         YDL063C                                 IV         338272       340134     -1
+5         YDL064W               UBC9              IV         337487       338070      1
+                                                                                                                                                                                                                                                             description
+3                                           Dubious open reading frame unlikely to encode a protein, based on available experimental and comparative sequence data; partially overlaps uncharacterized ORF YDL063C; YDL062W is not essential [Source:SGD;Acc:S000002220]
+4                                                                                      Protein required for biogenesis of the large ribosomal subunit; green fluorescent protein (GFP)-fusion protein localizes to the cytoplasm and nucleus [Source:SGD;Acc:S000002221]
+5 SUMO-conjugating enzyme involved in the Smt3p conjugation pathway; nuclear protein required for S- and M-phase cyclin degradation and mitotic control; involved in proteolysis mediated by the anaphase-promoting complex cyclosome (APCC) [Source:SGD;Acc:S000002222]
+> # Load the STRINGdb package
+> require(STRINGdb)
+Loading required package: STRINGdb
+Loading required package: png
+Loading required package: sqldf
+Loading required package: gsubfn
+Loading required package: proto
+No protocol specified
+Loading required package: RSQLite
+Loading required package: DBI
+Loading required package: igraph
+
+Attaching package: ‘igraph’
+
+The following object is masked from ‘package:R.utils’:
+
+    %<-%
+
+The following object is masked from ‘package:R.oo’:
+
+    hierarchy
+
+The following object is masked from ‘package:Rsamtools’:
+
+    path
+
+The following object is masked from ‘package:Biostrings’:
+
+    compare
+
+The following object is masked from ‘package:XVector’:
+
+    compare
+
+The following object is masked from ‘package:GenomicRanges’:
+
+    compare
+
+The following objects are masked from ‘package:IRanges’:
+
+    compare, simplify
+
+The following object is masked from ‘package:S4Vectors’:
+
+    compare
+
+Loading required package: RCurl
+Loading required package: bitops
+
+Attaching package: ‘RCurl’
+
+The following object is masked from ‘package:R.utils’:
+
+    reset
+
+The following object is masked from ‘package:R.oo’:
+
+    clone
+
+Loading required package: plotrix
+Loading required package: RColorBrewer
+Loading required package: gplots
+
+Attaching package: ‘gplots’
+
+The following object is masked from ‘package:plotrix’:
+
+    plotCI
+
+The following object is masked from ‘package:IRanges’:
+
+    space
+
+The following object is masked from ‘package:stats’:
+
+    lowess
+
+Loading required package: hash
+hash-2.2.6 provided by Decision Patterns
+
+
+Attaching package: ‘hash’
+
+The following object is masked from ‘package:biomaRt’:
+
+    keys
+
+The following objects are masked from ‘package:Gviz’:
+
+    values, values<-
+
+The following objects are masked from ‘package:GenomicRanges’:
+
+    values, values<-
+
+The following objects are masked from ‘package:IRanges’:
+
+    values, values<-
+
+The following objects are masked from ‘package:S4Vectors’:
+
+    values, values<-
+
+> # create a connection to the Saccharomyces cerevisiae data (species 4932)
+> stringDB <- STRINGdb$new( version="9_05", species=4932, score_threshold=0, input_directory="")
+> # filter the gene list for those that are mapped in the stringDB
+> genes <- as.data.frame(nlrt$table)
+> genes <- genes[order(genes$PValue,decreasing=F),]
+> genes$adjp <- p.adjust(genes$PValue,method="BH")
+> genes$geneid <- rownames(genes)
+> mapped <- stringDB$map(genes,"geneid", removeUnmappedRows=TRUE)
+trying URL 'http://string.uzh.ch/permanent/string/9_05/protein_aliases/4932__protein_aliases_tf.tsv.gz'
+Content type 'application/x-gzip' length 1255338 bytes (1.2 Mb)
+opened URL
+==================================================
+downloaded 1.2 Mb
+
+trying URL 'http://string.uzh.ch/permanent/string/9_05/proteins/4932__proteins.tsv.gz'
+Content type 'application/x-gzip' length 1112099 bytes (1.1 Mb)
+opened URL
+==================================================
+downloaded 1.1 Mb
+
+Warning:  we couldn't map to STRING 5% of your identifiers
+> stringDB$plot_network(mapped$STRING_id[1:20])
+trying URL 'http://string.uzh.ch/permanent/string/9_05/protein_links/4932__protein_links.tsv.gz'
+Content type 'application/x-gzip' length 6700352 bytes (6.4 Mb)
+opened URL
+==================================================
+downloaded 6.4 Mb
+
+> backgroundV <- mapped$STRING_id
+> stringDB$set_background(backgroundV)
+IGRAPH UN-- 6393 830068 -- 
++ attr: name (v/c), neighborhood (e/n), fusion (e/n), cooccurence (e/n),
+  coexpression (e/n), experimental (e/n), database (e/n), textmining (e/n),
+  combined_score (e/n)
+> 
+> sig <- mapped[which(mapped$adjp<=0.05),]
+> enrichGOBP <- stringDB$get_enrichment( sig, category = "Process", 
++                                       methodMT = "fdr", iea = TRUE )
+trying URL 'http://string.uzh.ch/permanent/string/9_05/enrichment_annotations/annotations/annotations_4932.tsv.gz'
+Content type 'application/x-gzip' length 1443707 bytes (1.4 Mb)
+opened URL
+==================================================
+downloaded 1.4 Mb
+
+Loading required package: tcltk
+Error in dfcountMerged2$hits - 1 : 
+  non-numeric argument to binary operator
+> enrichKEGG <- stringDB$get_enrichment( sig, category = "KEGG", methodMT = "fdr", 
++                                       iea = TRUE )
+Error in dfcountMerged2$hits - 1 : 
+  non-numeric argument to binary operator
+> head(enrichmentGO, n=7)
+Error in head(enrichmentGO, n = 7) : 
+  error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'enrichmentGO' not found
+> head(enrichmentKEGG, n=7)
+Error in head(enrichmentKEGG, n = 7) : 
+  error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'enrichmentKEGG' not found
+> clustersList <- stringDB$get_clusters(mapped$STRING_id[1:60])
+> backgroundV <- mapped$STRING_id
+> stringDB$set_background(backgroundV)
+IGRAPH UN-- 6393 830068 -- 
++ attr: name (v/c), neighborhood (e/n), fusion (e/n), cooccurence (e/n),
+  coexpression (e/n), experimental (e/n), database (e/n), textmining (e/n),
+  combined_score (e/n)
+> 
+> sig <- mapped[which(mapped$adjp<=0.05),]
+> enrichGOBP <- stringDB$get_enrichment( sig, category = "Process", 
++                                       methodMT = "fdr", iea = TRUE )
+Error in dfcountMerged2$hits - 1 : 
+  non-numeric argument to binary operator
+> enrichKEGG <- stringDB$get_enrichment( sig, category = "KEGG", methodMT = "fdr", 
++                                       iea = TRUE )
+Error in dfcountMerged2$hits - 1 : 
+  non-numeric argument to binary operator
+> head(enrichmentGO, n=7)
+Error in head(enrichmentGO, n = 7) : 
+  error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'enrichmentGO' not found
+> head(enrichmentKEGG, n=7)
+Error in head(enrichmentKEGG, n = 7) : 
+  error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'enrichmentKEGG' not found
+> backgroundV <- mapped$STRING_id
+> stringDB$set_background(backgroundV)
+IGRAPH UN-- 6393 830068 -- 
++ attr: name (v/c), neighborhood (e/n), fusion (e/n), cooccurence (e/n),
+  coexpression (e/n), experimental (e/n), database (e/n), textmining (e/n),
+  combined_score (e/n)
+> 
+> sig <- mapped[which(mapped$adjp<=0.05),]
+> enrichGOBP <- stringDB$get_enrichment( sig, category = "Process", 
++                                       methodMT = "fdr", iea = TRUE )
+Error in dfcountMerged2$hits - 1 : 
+  non-numeric argument to binary operator
+> enrichKEGG <- stringDB$get_enrichment( sig, category = "KEGG", methodMT = "fdr", 
++                                       iea = TRUE )
+Error in dfcountMerged2$hits - 1 : 
+  non-numeric argument to binary operator
+> head(enrichmentGO, n=7)
+Error in head(enrichmentGO, n = 7) : 
+  error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'enrichmentGO' not found
+> head(enrichmentKEGG, n=7)
+Error in head(enrichmentKEGG, n = 7) : 
+  error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'enrichmentKEGG' not found
+Error in readChar(con, 5L, useBytes = TRUE) : cannot open the connection
+In addition: Warning message:
+In readChar(con, 5L, useBytes = TRUE) :
+  cannot open compressed file '/homes/nschan/.rstudio/graphics-r3/.snapshot', probable reason 'No such file or directory'
+Graphics error: Plot rendering error
+> clustersList <- stringDB$get_clusters(mapped$STRING_id[1:60])
+Warning messages:
+1: display list redraw incomplete 
+2: display list redraw incomplete 
+> clustersList <- stringDB$get_clusters(mapped$STRING_id[1:60])
+> clustersList <- stringDB$get_clusters(mapped$STRING_id[1:60])
+> clustersList <- stringDB$get_clusters(mapped$STRING_id[1:60])
+> backgroundV <- mapped$STRING_id
+> stringDB$set_background(backgroundV)
+IGRAPH UN-- 6393 830068 -- 
++ attr: name (v/c), neighborhood (e/n), fusion (e/n), cooccurence (e/n),
+  coexpression (e/n), experimental (e/n), database (e/n), textmining (e/n),
+  combined_score (e/n)
+> 
+> sig <- mapped[which(mapped$adjp<=0.05),]
+> enrichGOBP <- stringDB$get_enrichment( sig, category = "Process", 
++                                       methodMT = "fdr", iea = TRUE )
+Error in dfcountMerged2$hits - 1 : 
+  non-numeric argument to binary operator
+> enrichKEGG <- stringDB$get_enrichment( sig, category = "KEGG", methodMT = "fdr", 
++                                       iea = TRUE )
+Error in dfcountMerged2$hits - 1 : 
+  non-numeric argument to binary operator
+> head(enrichmentGO, n=7)
+Error in head(enrichmentGO, n = 7) : 
+  error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'enrichmentGO' not found
+> head(enrichmentKEGG, n=7)
+Error in head(enrichmentKEGG, n = 7) : 
+  error in evaluating the argument 'x' in selecting a method for function 'head': Error: object 'enrichmentKEGG' not found
+> clustersList <- stringDB$get_clusters(mapped$STRING_id[1:60])
+> par(mfrow=c(1,2))
+> lapply(clustersList[1:2],stringDB$plot_network)
+[[1]]
+NULL
+
+[[2]]
+NULL
+
+No protocol specified
+No protocol specified
