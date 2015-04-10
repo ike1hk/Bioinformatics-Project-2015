@@ -1,3 +1,3 @@
-# Bioinformatics-Project-2015
+# Bioinformatics Project
 
-# This contains everything related to the Bioinformatics project
+
